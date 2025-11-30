@@ -2,7 +2,7 @@
 
 A CSS Houdini Paint Worklet to draw particles on a ring geometry.
 
-![CSS Houdini Ring Particles](https://github.com/bramus/css-houdini-ringparticles/blob/main/assets/css-houdini-ringparticles.png?raw=true)
+![CSS Houdini Ring Particles](./assets/css-houdini-ringparticles.png?raw=true)
 
 ## Usage
 
