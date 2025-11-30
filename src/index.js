@@ -49,24 +49,94 @@ class RingParticles {
 		return (m && m[1].split(',').length===4) ? m[1].split(',').map(Number) : [0.42, 0, 1, 1];
 	}
 
+	 parseProps(props) {
+		return [
+			'--ring-radius',
+			'--ring-thickness',
+			'--ring-x',
+			'--ring-y',
+			'--particle-count',
+			'--particle-rows',
+			'--particle-color',
+			'--particle-size',
+			'--particle-min-alpha',
+			'--particle-max-alpha',
+			'--fade-easing',
+			'--animation-tick',
+		].map((propName) => {
+			const prop = props.get(propName);
+
+			// Cater for browsers that don't speak CSS Typed OM and
+			// for browsers that do speak it, but haven't registered the props
+			if (
+				typeof CSSUnparsedValue === 'undefined' ||
+				prop instanceof CSSUnparsedValue
+			) {
+				if (!prop.length || prop === '') {
+					return undefined;
+				}
+
+				switch (propName) {
+					case '--ring-radius':
+					case '--ring-thickness':
+					case '--ring-x':
+					case '--ring-y':
+					case '--particle-size':
+					case '--particle-min-alpha':
+					case '--particle-max-alpha':
+						return parseFloat(prop.toString());
+
+					case '--particle-count':
+					case '--particle-rows':
+					case '--fade-easing':
+					case '--animation-tick':
+								return parseInt(prop.toString());
+
+					case '--particle-color':
+					default:
+						return prop.toString().trim();
+				}
+			}
+
+			// Prop is not typed using @property (UnparsedValue) and not set either
+			// ~> Return undefined so that we can fall back to the default value during destructuring
+			if (prop instanceof CSSUnparsedValue && !prop.length) {
+				return undefined;
+			}
+
+			// Prop is a UnitValue (Number, Percentage, Integer, …)
+			// ~> Return the value
+			if (prop instanceof CSSUnitValue) {
+				return prop.value;
+			}
+
+			// All others (such as CSSKeywordValue)
+			//~> Return the string
+			return prop.toString().trim();
+		});
+	}
+
 	paint(ctx, geom, properties) {
 		// --- CONFIG ---
-		const innerRadius = parseFloat(properties.get('--ring-radius').toString());
-		const thickness = parseFloat(properties.get('--ring-thickness').toString()) || 50;
-		const cx = (geom.width * parseFloat(properties.get('--ring-x').toString() || '50')) / 100;
-		const cy = (geom.height * parseFloat(properties.get('--ring-y').toString() || '50')) / 100;
+		  const [
+			innerRadius = 10,
+			thickness = 50,
+			ringX = 50,
+			ringY = 50,
+			count = 100,
+			rows= 5,
+			color = 'hotpink',
+			size = 2,
+			minAlpha = 0,
+			maxAlpha = 1,
+			fadeEasing = 'ease-in',
+			animationTick = 0,
+		  ] = this.parseProps(properties);
 
-		const count = parseInt(properties.get('--particle-count').toString());
-		const rows = parseInt(properties.get('--particle-rows').toString()) || 5;
-		const color = properties.get('--particle-color').toString().trim();
-		const size = parseFloat(properties.get('--particle-size').toString()) || 2;
-		const minAlpha = parseFloat(properties.get('--particle-min-alpha').toString() || '0');
-		const maxAlpha = parseFloat(properties.get('--particle-max-alpha').toString() || '1');
-
-		const [bx1, by1, bx2, by2] = this.parseEasing(properties.get('--fade-easing').toString());
-
-		const rawTick = parseFloat(properties.get('--animation-tick').toString());
-		const t = rawTick * Math.PI * 2;
+		const cx = (geom.width * ringX) / 100;
+		const cy = (geom.height * ringY) / 100;
+		const [bx1, by1, bx2, by2] = this.parseEasing(fadeEasing);
+		const t = animationTick * Math.PI * 2;
 
 		// Defining the Band
 		const outerRadius = innerRadius + thickness;
