@@ -89,19 +89,6 @@ You can tweak the appearance of the Ring Particles Paint Worklet by setting some
 ### Example
 
 ```css
-@property --ring-radius { syntax: '<number>'; inherits: false; initial-value: 140; }
-@property --ring-thickness { syntax: '<number>'; inherits: false; initial-value: 100; }
-@property --ring-x { syntax: '<number>'; inherits: false; initial-value: 50; }
-@property --ring-y { syntax: '<number>'; inherits: false; initial-value: 50; }
-@property --particle-count { syntax: '<number>'; inherits: false; initial-value: 90; }
-@property --particle-rows { syntax: '<number>'; inherits: false; initial-value: 35; }
-@property --particle-size { syntax: '<number>'; inherits: false; initial-value: 2; }
-@property --particle-color { syntax: '<color>'; inherits: false; initial-value: hotpink; }
-@property --particle-min-alpha { syntax: '<number>'; inherits: false; initial-value: 0; }
-@property --particle-max-alpha { syntax: '<number>'; inherits: false; initial-value: 1; }
-@property --fade-easing { syntax: '<string>'; inherits: false; initial-value: "ease-in"; }
-@property --animation-tick { syntax: '<number>'; inherits: false; initial-value: 0; }
-
 .element {
 	/* Ring Particles Base Config */
 	--ring-radius: 120;
@@ -124,6 +111,10 @@ You can tweak the appearance of the Ring Particles Paint Worklet by setting some
 	--ring-x: 50;
 	--ring-y: 50;
 
+	/* Seed for the "predictable random" generator */
+	/* See https://jakearchibald.com/2020/css-paint-predictably-random/ for details */
+    --seed: 42;
+
 	background-image: paint(ring-geometry);
 }
 ```
@@ -144,10 +135,29 @@ If you want to animate the ring, animate an `--animation-tick` custom property:
 To properly animate the Custom Properties and to make use of the built-in syntax validation you [need to register the Custom Properties](https://web.dev/at-property/). Include this CSS Snippet to do so:
 
 ```css
-
+@property --ring-radius { syntax: '<number> | random'; inherits: false; initial-value: random; }
+@property --ring-thickness { syntax: '<number> | random'; inherits: false; initial-value: random; }
+@property --ring-x { syntax: '<number>'; inherits: false; initial-value: 50; }
+@property --ring-y { syntax: '<number>'; inherits: false; initial-value: 50; }
+@property --particle-count { syntax: '<number> | random'; inherits: false; initial-value: random; }
+@property --particle-rows { syntax: '<number> | random'; inherits: false; initial-value: random; }
+@property --particle-size { syntax: '<number> | random'; inherits: false; initial-value: random; }
+@property --particle-color { syntax: '<color> | random'; inherits: false; initial-value: random; }
+@property --particle-min-alpha { syntax: '<number>'; inherits: false; initial-value: 0; }
+@property --particle-max-alpha { syntax: '<number>'; inherits: false; initial-value: 1; }
+@property --fade-easing { syntax: '<string>'; inherits: false; initial-value: "ease-in"; }
+@property --seed { syntax: '<number>'; inherits: false; initial-value: 0; }
+@property --animation-tick { syntax: '<number>'; inherits: false; initial-value: 0; }
 ```
 
-💡 Inclusion of this code snippet is not required, but recommended.
+💡 Inclusion of this code snippet is not required, but recommended. The only properties you really would want to animate/transition are:
+
+```css
+@property --ring-x { syntax: '<number>'; inherits: false; initial-value: 50; }
+@property --ring-y { syntax: '<number>'; inherits: false; initial-value: 50; }
+@property --particle-color { syntax: '<color> | random'; inherits: false; initial-value: random; }
+@property --animation-tick { syntax: '<number>'; inherits: false; initial-value: 0; }
+```
 
 ## Demo / Development
 

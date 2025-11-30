@@ -17,9 +17,14 @@ class RingParticles {
 		'--animation-tick',
 		'--particle-min-alpha', '--particle-max-alpha',
 		'--ring-x', '--ring-y',
-		'--fade-easing'
+		'--fade-easing',
+		'--seed',
 		];
 	}
+
+    constructor() {
+        this.getRandom = mulberry32(0);
+    }
 
 	/* --- BEZIER MATH --- */
 	getBezierValue(t, p0, p1, p2, p3) {
@@ -49,7 +54,11 @@ class RingParticles {
 		return (m && m[1].split(',').length===4) ? m[1].split(',').map(Number) : [0.42, 0, 1, 1];
 	}
 
-	 parseProps(props) {
+    rand(min, max) {
+        return Math.floor(this.getRandom() * (max - min + 1)) + min;
+    }
+
+	parseProps(props) {
 		return [
 			'--ring-radius',
 			'--ring-thickness',
@@ -63,6 +72,7 @@ class RingParticles {
 			'--particle-max-alpha',
 			'--fade-easing',
 			'--animation-tick',
+			'--seed',
 		].map((propName) => {
 			const prop = props.get(propName);
 
@@ -84,13 +94,22 @@ class RingParticles {
 					case '--particle-size':
 					case '--particle-min-alpha':
 					case '--particle-max-alpha':
-						return parseFloat(prop.toString());
+						if (prop != 'random') {
+							return parseFloat(prop.toString());
+						} else {
+							return prop.toString().trim();
+						}
 
 					case '--particle-count':
 					case '--particle-rows':
 					case '--fade-easing':
 					case '--animation-tick':
-								return parseInt(prop.toString());
+                    case '--seed':
+						if (prop != 'random') {
+							return parseInt(prop.toString());
+						} else {
+							return prop.toString().trim();
+						}
 
 					case '--particle-color':
 					default:
@@ -118,20 +137,30 @@ class RingParticles {
 
 	paint(ctx, geom, properties) {
 		// --- CONFIG ---
-		  const [
-			innerRadius = 10,
-			thickness = 50,
+		let [
+			innerRadius = 'random',
+			thickness = 'random',
 			ringX = 50,
 			ringY = 50,
-			numParticles = 100,
-			numRows = 5,
-			color = 'hotpink',
-			particleSize = 2,
+			numParticles = 'random',
+			numRows = 'random',
+			color = 'random',
+			particleSize = 'random',
 			minAlpha = 0,
 			maxAlpha = 1,
 			fadeEasing = 'ease-in',
 			animationTick = 0,
-		  ] = this.parseProps(properties);
+			seed = 0,
+		] = this.parseProps(properties);
+
+        this.getRandom = mulberry32(seed);
+
+		if (innerRadius === 'random') innerRadius = this.rand(50, 250);
+		if (thickness === 'random') thickness = this.rand(100, 200);
+		if (numParticles === 'random') numParticles = this.rand(50, 200);
+		if (numRows === 'random') numRows = this.rand(50, 100);
+		if (color === 'random') color = `hsl(${this.rand(0, 360)},${this.rand(0, 100)}%,${this.rand(0, 100)}%)`;
+		if (particleSize === 'random') particleSize = this.rand(1, 3);
 
 		const cx = (geom.width * ringX) / 100;
 		const cy = (geom.height * ringY) / 100;

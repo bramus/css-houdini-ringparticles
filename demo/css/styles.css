@@ -1,15 +1,6 @@
 /* --- REGISTER PROPERTIES --- */
-@property --ring-radius { syntax: '<number>'; inherits: false; initial-value: 140; }
-@property --ring-thickness { syntax: '<number>'; inherits: false; initial-value: 100; }
 @property --ring-x { syntax: '<number>'; inherits: false; initial-value: 50; }
 @property --ring-y { syntax: '<number>'; inherits: false; initial-value: 50; }
-@property --particle-count { syntax: '<number>'; inherits: false; initial-value: 90; }
-@property --particle-rows { syntax: '<number>'; inherits: false; initial-value: 35; }
-@property --particle-size { syntax: '<number>'; inherits: false; initial-value: 2; }
-@property --particle-color { syntax: '<color>'; inherits: false; initial-value: hotpink; }
-@property --particle-min-alpha { syntax: '<number>'; inherits: false; initial-value: 0; }
-@property --particle-max-alpha { syntax: '<number>'; inherits: false; initial-value: 1; }
-@property --fade-easing { syntax: '<string>'; inherits: false; initial-value: "ease-in"; }
 @property --animation-tick { syntax: '<number>'; inherits: false; initial-value: 0; }
 
 /* --- PAGE STYLING --- */
@@ -30,25 +21,6 @@ body {
 .particle-ring {
 	width: 100%;
 	height: 100%;
-
-	/* Config */
-	--ring-radius: 120;
-	--ring-thickness: 120;
-	--particle-count: 90;
-	--particle-rows: 35;
-	--particle-size: 2;
-	--particle-color: #00d2ff;
-
-	--min-alpha: 0.1; /* Slight visibility in troughs */
-	--max-alpha: 1;
-
-	/* Easing: Controls how fast it fades from the edge to the center */
-	/* 'ease-out' makes the edges soft but quickly visible. */
-	/* 'ease-in' makes the edges stay invisible longer (sharper center). */
-	--fade-easing: 'ease-in';
-
-	--ring-x: 50;
-	--ring-y: 50;
 
 	background-image: paint(ring-particles);
 

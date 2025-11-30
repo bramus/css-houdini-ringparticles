@@ -12,14 +12,12 @@
 
 		<div class="controls">
 			<h2>Configuration</h2>
-			<div class="control-group"><label>Fade Easing</label><input type="text" value="ease-in" id="inp-easing"></div>
-			<div class="divider"></div>
 			<div class="control-group"><label>Inner Radius: <span id="val-radius">120</span></label><input type="range" min="10" max="300" value="120" id="inp-radius"></div>
 			<div class="control-group"><label>Thickness: <span id="val-thickness">120</span></label><input type="range" min="10" max="300" value="120" id="inp-thickness"></div>
 			<div class="control-group"><label>Particles per Row: <span id="val-count">90</span></label><input type="range" min="10" max="200" value="90" id="inp-count"></div>
 			<div class="control-group"><label>Rows: <span id="val-rows">35</span></label><input type="range" min="1" max="50" value="35" id="inp-rows"></div>
 			<div class="divider"></div>
-			<div class="control-group"><label>Min Opacity: <span id="val-min">0.1</span></label><input type="range" min="0" max="1" step="0.01" value="0.1" id="inp-min"></div>
+			<div class="control-group"><label>Min Opacity: <span id="val-min">0.1</span></label><input type="range" min="0" max="1" step="0.01" value="0" id="inp-min"></div>
 			<div class="control-group"><label>Max Opacity: <span id="val-max">1.0</span></label><input type="range" min="0" max="1" step="0.01" value="1.0" id="inp-max"></div>
 			<div class="control-group"><label>Color</label><input type="color" value="#00d2ff" id="inp-color"></div>
 		</div>
@@ -37,12 +35,15 @@
 		<script>
 			const ring = document.getElementById('ring');
 			const bindControl = (id, prop, displayId, suffix='') => {
-			const el = document.getElementById(id);
-			const display = document.getElementById(displayId);
-			el.addEventListener('input', (e) => {
-				ring.style.setProperty(prop, e.target.value);
-				if(display) display.innerText = e.target.value + suffix;
-			});
+				const el = document.getElementById(id);
+				const display = document.getElementById(displayId);
+				el.addEventListener('input', (e) => {
+					ring.style.setProperty(prop, e.target.value);
+					if(display) display.innerText = e.target.value + suffix;
+				});
+				el.addEventListener('manual-change', (e) => {
+					ring.style.setProperty(prop, e.target.value);
+				});
 			};
 
 			bindControl('inp-radius', '--ring-radius', 'val-radius');
@@ -53,7 +54,13 @@
 			bindControl('inp-max', '--particle-max-alpha', 'val-max');
 			bindControl('inp-color', '--particle-color', null);
 
-			document.getElementById('inp-easing').addEventListener('input', (e) => ring.style.setProperty('--fade-easing', e.target.value));
+			// Set random values for (most controls)
+			document.querySelectorAll('input[type=range]:not([step="0.01"])').forEach($input => {
+				$input.value = Math.random() * ($input.max - $input.min) + $input.min;
+				$input.dispatchEvent(new CustomEvent('manual-change'));
+			});
+			// Sync color
+			document.querySelector('input[type=color]').dispatchEvent(new CustomEvent('manual-change'));
 		</script>
 
 		<script>
