@@ -1,6 +1,6 @@
 {
   "name": "css-houdini-ringparticles",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "CSS Houdini Ring Particles",
   "source": "src/index.js",
   "main": "dist/ringparticles.js",
