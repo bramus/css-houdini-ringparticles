@@ -34,12 +34,12 @@ You'll find the built file in the `./dist` folder.
 
 To include it you must loads the module in the given JavaScript file and add it to the Paint Worklet.
 
-If you want to use the UNPKG hosted version of `css-houdini-ringparticles`, use `https://unpkg.com/css-houdini-ringparticles/dist/circles.js` as the `moduleURL`.
+If you want to use the UNPKG hosted version of `css-houdini-ringparticles`, use `https://unpkg.com/css-houdini-ringparticles/dist/ringparticles.js` as the `moduleURL`.
 
 ```js
 if ('paintWorklet' in CSS) {
 	CSS.paintWorklet.addModule(
-		'https://unpkg.com/css-houdini-ringparticles/dist/circles.js'
+		'https://unpkg.com/css-houdini-ringparticles/dist/ringparticles.js'
 	);
 }
 ```
@@ -48,7 +48,7 @@ If you've installed `css-houdini-ringparticles` using NPM or have manually built
 
 ```js
 if ('paintWorklet' in CSS) {
-	CSS.paintWorklet.addModule('url/to/circles.js');
+	CSS.paintWorklet.addModule('url/to/ringparticles.js');
 }
 ```
 
@@ -64,7 +64,7 @@ To add support for [browsers that don't speak Houdini](https://ishoudinireadyyet
 		}
 
 		CSS.paintWorklet.addModule(
-			'https://unpkg.com/css-houdini-ringparticles/dist/circles.js'
+			'https://unpkg.com/css-houdini-ringparticles/dist/ringparticles.js'
 		);
 	})();
 </script>
@@ -72,11 +72,11 @@ To add support for [browsers that don't speak Houdini](https://ishoudinireadyyet
 
 ### 3. Applying `css-houdini-ringparticles`
 
-To use Ring Particles Paint Worklet you need to set the `background-image` property to `paint(circles)`
+To use Ring Particles Paint Worklet you need to set the `background-image` property to `paint(ringparticles)`
 
 ```css
 .element {
-	background-image: paint(ring-geometry);
+	background-image: paint(ring-particles);
 }
 ```
 
