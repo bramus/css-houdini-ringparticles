@@ -123,10 +123,10 @@ class RingParticles {
 			thickness = 50,
 			ringX = 50,
 			ringY = 50,
-			count = 100,
-			rows= 5,
+			numParticles = 100,
+			numRows = 5,
 			color = 'hotpink',
-			size = 2,
+			particleSize = 2,
 			minAlpha = 0,
 			maxAlpha = 1,
 			fadeEasing = 'ease-in',
@@ -145,12 +145,12 @@ class RingParticles {
 
 		ctx.fillStyle = color;
 
-		for (let r = 0; r < rows; r++) {
-			const rowProgress = rows > 1 ? r / (rows - 1) : 0;
+		for (let r = 0; r < numRows; r++) {
+			const rowProgress = numRows > 1 ? r / (numRows - 1) : 0;
 			const currentBaseRadius = innerRadius + (rowProgress * thickness);
 
-			for (let i = 0; i < count; i++) {
-				const angle = (i / count) * Math.PI * 2;
+			for (let i = 0; i < numParticles; i++) {
+				const angle = (i / numParticles) * Math.PI * 2;
 
 				// --- WAVE PHYSICS ---
 				const w1 = Math.sin((angle * 5) + t);
@@ -204,7 +204,7 @@ class RingParticles {
 				if (alpha > 0.01) { // Performance: Don't draw invisible dots
 				ctx.globalAlpha = alpha;
 				ctx.beginPath();
-				ctx.arc(x, y, size, 0, 2 * Math.PI);
+				ctx.arc(x, y, particleSize, 0, 2 * Math.PI);
 				ctx.fill();
 				}
 			}
