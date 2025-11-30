@@ -1,0 +1,42 @@
+{
+  "name": "css-houdini-ringparticles",
+  "version": "1.0.0",
+  "description": "CSS Houdini Ring Particles",
+  "source": "src/index.js",
+  "main": "dist/ringparticles.js",
+  "scripts": {
+    "build": "microbundle --entry src/index.js --output dist/ringparticles.js --no-pkg-main --format modern --no-sourcemap",
+    "prepublish": "npm run build",
+    "predemo": "npm run build",
+    "demo": "node ./server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bramus/css-houdini-ringparticles.git"
+  },
+  "keywords": [
+    "houdini",
+    "css-houdini",
+    "css",
+    "paintworklet",
+    "paint",
+    "worklet",
+    "background",
+    "particles"
+  ],
+  "author": {
+    "name": "Bramus Van Damme",
+    "email": "bramus@bram.us",
+    "web": "https://www.bram.us/"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/bramus/css-houdini-ringparticles/issues"
+  },
+  "homepage": "https://github.com/bramus/css-houdini-ringparticles#readme",
+  "devDependencies": {
+    "express": "^4.17.1",
+    "microbundle": "^0.14.2"
+  }
+}
