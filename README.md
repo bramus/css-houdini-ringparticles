@@ -151,7 +151,7 @@ To properly animate the Custom Properties and to make use of the built-in syntax
 
 ## Demo / Development
 
-You can play with a small demo on CodePen over at [https://codepen.io/bramus/pen/PoGbbzL](https://codepen.io/bramus/pen/PoGbbzL)
+You can play with a small demo on CodePen over at [https://codepen.io/bramus/pen/RNaJXEB](https://codepen.io/bramus/pen/RNaJXEB)
 
 If you've cloned the repo you can run `npm run demo` to launch the included demo.
 
