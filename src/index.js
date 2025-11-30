@@ -54,8 +54,18 @@ class RingParticles {
 		return (m && m[1].split(',').length===4) ? m[1].split(',').map(Number) : [0.42, 0, 1, 1];
 	}
 
-    rand(min, max) {
+	// A simple hash function to get deterministic numbers from the seed
+	hash(n) {
+		let x = Math.sin(n) * 43758.5453123;
+		return x - Math.floor(x);
+	}
+
+    randomInt(min, max) {
         return Math.floor(this.getRandom() * (max - min + 1)) + min;
+    }
+
+    randomFloat(min, max) {
+        return min + this.getRandom() * (max - min);
     }
 
 	parseProps(props) {
@@ -155,22 +165,38 @@ class RingParticles {
 
         this.getRandom = mulberry32(seed);
 
-		if (innerRadius === 'random') innerRadius = this.rand(50, 250);
-		if (thickness === 'random') thickness = this.rand(100, 200);
-		if (numParticles === 'random') numParticles = this.rand(50, 200);
-		if (numRows === 'random') numRows = this.rand(50, 100);
-		if (color === 'random') color = `hsl(${this.rand(0, 360)},${this.rand(0, 100)}%,${this.rand(0, 100)}%)`;
-		if (particleSize === 'random') particleSize = this.rand(1, 3);
+		if (innerRadius === 'random') innerRadius = this.randomInt(50, 250);
+		if (thickness === 'random') thickness = this.randomInt(100, 200);
+		if (numParticles === 'random') numParticles = this.randomInt(50, 200);
+		if (numRows === 'random') numRows = this.randomInt(50, 100);
+		if (color === 'random') color = `hsl(${this.randomInt(0, 360)},${this.randomInt(0, 100)}%,${this.randomInt(0, 100)}%)`;
+		if (particleSize === 'random') particleSize = this.randomInt(1, 3);
+
+		// --- GENERATE PHYSICS CONSTANTS FROM SEED ---
+		// Wave 1: Primary Swell
+		const w1Freq = this.randomInt(2, 8); // e.g. 2 to 8 peaks
+		const w1Speed = this.randomInt(1, 2); // Speed multiplier
+		const w1Dir = this.hash(seed + 10) > 0.5 ? 1 : -1;
+
+		// Wave 2: Interference
+		const w2Freq = this.randomInt(2, 9);
+		const w2Speed = 1; // Keep one synced to main time for stability
+		const w2Dir = -w1Dir; // Opposite direction usually looks best
+
+		// Row Twist: How much inner/outer rings disconnect
+		// Can be float, but 't' must be full cycle.
+		const rowTwistStrength = this.randomFloat(0.2, 0.8);
+
+		// Amplitude: How "wild" the water is
+		const amplitude = this.randomInt(8, 20);
 
 		const cx = (geom.width * ringX) / 100;
 		const cy = (geom.height * ringY) / 100;
 		const [bx1, by1, bx2, by2] = this.parseEasing(fadeEasing);
 		const t = animationTick * Math.PI * 2;
 
-		// Defining the Band
 		const outerRadius = innerRadius + thickness;
-		// Midpoint is max visibility
-		const midRadius = innerRadius + (thickness / 2);
+		const halfThick = thickness / 2;
 
 		ctx.fillStyle = color;
 
@@ -182,9 +208,9 @@ class RingParticles {
 				const angle = (i / numParticles) * Math.PI * 2;
 
 				// --- WAVE PHYSICS ---
-				const w1 = Math.sin((angle * 5) + t);
-				const w2 = Math.sin((angle * 3) - t);
-				const rowOffset = Math.sin((r * 0.3) + t);
+				const w1 = Math.sin((angle * w1Freq) + (t * w1Speed * w1Dir));
+				const w2 = Math.sin((angle * w2Freq) + (t * w2Speed * w2Dir));
+				const rowOffset = Math.sin((r * rowTwistStrength) + t);
 				const waveHeight = w1 + w2 + rowOffset;
 
 				// --- DEPTH OPACITY (From Wave Height) ---
@@ -193,7 +219,7 @@ class RingParticles {
 				let alpha = minAlpha + (normalized * (maxAlpha - minAlpha));
 
 				// --- POSITION ---
-				const distortion = waveHeight * 10;
+				const distortion = waveHeight * amplitude; // Use seeded amplitude
 				const finalRadius = currentBaseRadius + distortion;
 				const x = cx + Math.cos(angle) * finalRadius;
 				const y = cy + Math.sin(angle) * finalRadius;
@@ -210,7 +236,6 @@ class RingParticles {
 				// 3. Normalize this distance
 				// 0 means "At the edge"
 				// (thickness / 2) means "Exactly in the middle"
-				const halfThick = thickness / 2;
 				let visibility = closestEdgeDist / halfThick;
 
 				// 4. Clamp & Clip

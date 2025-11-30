@@ -15,7 +15,7 @@
 			<div class="control-group"><label>Inner Radius: <span id="val-radius">120</span></label><input type="range" min="10" max="300" value="120" id="inp-radius"></div>
 			<div class="control-group"><label>Thickness: <span id="val-thickness">120</span></label><input type="range" min="10" max="300" value="120" id="inp-thickness"></div>
 			<div class="control-group"><label>Particles per Row: <span id="val-count">90</span></label><input type="range" min="10" max="200" value="90" id="inp-count"></div>
-			<div class="control-group"><label>Rows: <span id="val-rows">35</span></label><input type="range" min="1" max="50" value="35" id="inp-rows"></div>
+			<div class="control-group"><label>Rows: <span id="val-rows">35</span></label><input type="range" min="20" max="100" value="35" id="inp-rows"></div>
 			<div class="divider"></div>
 			<div class="control-group"><label>Min Opacity: <span id="val-min">0.1</span></label><input type="range" min="0" max="1" step="0.01" value="0" id="inp-min"></div>
 			<div class="control-group"><label>Max Opacity: <span id="val-max">1.0</span></label><input type="range" min="0" max="1" step="0.01" value="1.0" id="inp-max"></div>
@@ -64,12 +64,17 @@
 		</script>
 
 		<script>
-			// let isInteractive = false;
-			// window.addEventListener('mousemove', (e) => {
-			// 	if (!isInteractive) { ring.classList.add('interactive'); isInteractive = true; }
-			// 	ring.style.setProperty('--ring-x', (e.clientX / window.innerWidth) * 100);
-			// 	ring.style.setProperty('--ring-y', (e.clientY / window.innerHeight) * 100);
-			// });
+			let isInteractive = false;
+			document.querySelector('#ring').addEventListener('mousemove', (e) => {
+				if (!isInteractive) { ring.classList.add('interactive'); isInteractive = true; }
+				ring.style.setProperty('--ring-x', (e.clientX / window.innerWidth) * 100);
+				ring.style.setProperty('--ring-y', (e.clientY / window.innerHeight) * 100);
+			});
+			document.querySelector('#ring').addEventListener('mouseout', (e) => {
+				ring.classList.remove('interactive'); isInteractive = false;
+				ring.style.setProperty('--ring-x', 50);
+				ring.style.setProperty('--ring-y', 50);
+			});
 		</script>
 	</body>
 </html>
